@@ -20,29 +20,20 @@ int main()
 	struct sockaddr_in client_addr;
 	socklen_t sin_size;
 	char msg[MAX_SIZE] = "Hello! ...\n";
-	//未做异常判断 socket() bind() listen() accept() wirte()错误返回值为-1
-
-	// AF_INET 表示IPV4版本 还有IPV6版本
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	printf("this type int desc:%d", sockfd);
-
 	bzero(&server_addr, sizeof(struct sockaddr_in));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY); //
 	printf("the server addr is:%x", INADDR_ANY);
-	//server_addr.sin_addr.s_addr=inet_addr("127.0.0.1");
 	server_addr.sin_port = htons(PORTNUM);
-
 	int ret = bind(sockfd, (struct sockaddr *)(&server_addr), sizeof(struct sockaddr));
-
 	ret = listen(sockfd, 5);
-
 	while (1)
 	{
 		sin_size = sizeof(server_addr);
 		new_fd = accept(sockfd, (struct sockaddr *)(&client_addr), &sin_size);
 		fprintf(stderr, "Server get connection from %s\n", inet_ntoa(client_addr.sin_addr));
-
 		ret = write(new_fd, msg, strlen(msg));
 		while (1)
 		{
@@ -56,8 +47,6 @@ int main()
 		}
 		close(new_fd);
 	}
-
 	close(sockfd);
-
 	return 0;
 }
